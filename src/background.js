@@ -1,10 +1,12 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
-import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+const { navigation } = require('../public/main/menu/navigation');
+const { keyboard } = require('../public/main/menu/key-board')
+const { openTray ,clearTray,openSwitchTray ,clearSwitchTray} = require('../public/main/menu/tray')
+// import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
-
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
@@ -17,14 +19,15 @@ protocol.registerSchemesAsPrivileged([
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1360,
+    height: 750,
+    //  隐藏菜单
+    autoHideMenuBar: true,
     webPreferences: {
-      // Use pluginOptions.nodeIntegration, leave this alone
-      // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
+      nodeIntegration: true,
     }
   })
+
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -35,7 +38,7 @@ function createWindow() {
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
   }
-
+  // winEvent(win)
   win.on('closed', () => {
     win = null
   })
@@ -62,15 +65,41 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  if (isDevelopment && !process.env.IS_TEST) {
-    // Install Vue Devtools
-    try {
-      await installExtension(VUEJS_DEVTOOLS)
-    } catch (e) {
-      console.error('Vue Devtools failed to install:', e.toString())
-    }
-  }
+  // if (isDevelopment && !process.env.IS_TEST) {
+  //   // Install Vue Devtools
+  //   try {
+  //     await installExtension(VUEJS_DEVTOOLS)
+  //   } catch (e) {
+  //     console.error('Vue Devtools failed to install:', e.toString())
+  //   }
+  // }
   createWindow()
+  navigation(win)
+  keyboard(win)
+  // trayIcon()
+  
+  ipcMain.on('opne-only-tray',(event,param)=>{
+    if(param === 'open'){
+      openTray()
+    }
+  })
+  ipcMain.on('clear-onlu-tray',(event,param)=>{
+    if(param === 'clear'){
+      clearTray();
+    }
+  })
+  ipcMain.on('send-tray',(event,parsm)=>{
+    console.log('open');
+    if(parsm === 'open'){
+      openSwitchTray()
+    }
+  })
+  ipcMain.on('clear-tray',(event,param)=>{
+    console.log('clear');
+    if(param === 'clear'){
+      clearSwitchTray()
+    }
+  })
 })
 
 // Exit cleanly on request from parent process in development mode.
