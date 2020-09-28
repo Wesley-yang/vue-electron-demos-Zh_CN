@@ -4,7 +4,7 @@ import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 const { navigation } = require('../public/main/menu/navigation');
 const { keyboard } = require('../public/main/menu/key-board')
-const { openTray ,clearTray,openSwitchTray ,clearSwitchTray} = require('../public/main/menu/tray')
+const { openTray ,clearTray,openSwitchTray ,clearSwitchTray,trayMenu ,removeTaryMenu} = require('../public/main/menu/tray')
 // import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 // Keep a global reference of the window object, if you don't, the window will
@@ -77,6 +77,15 @@ app.on('ready', async () => {
   navigation(win)
   keyboard(win)
   // trayIcon()
+  
+  ipcMain.on('main-menu',(event,param)=>{
+    console.log(param);
+    if(param === 'ok'){
+      trayMenu(win)
+    }else if(param === 'no'){
+      removeTaryMenu()
+    }
+  })
   
   ipcMain.on('opne-only-tray',(event,param)=>{
     if(param === 'open'){

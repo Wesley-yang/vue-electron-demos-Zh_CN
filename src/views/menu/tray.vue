@@ -28,7 +28,7 @@
         </div>
       </Panel>
 
-      <Panel name="2">
+      <Panel name="3">
         <span>闪烁图标</span>
         <div slot="content">
           <Button @click="handleOpenOfClearTray">{{ showMsg }}</Button>
@@ -46,6 +46,16 @@
           </div>
         </div>
       </Panel>
+
+      <Panel name="2">
+        <span>托盘菜单</span>
+        <div slot="content">
+          <Button @click="handleTrayMenu">{{ menuMsg }}</Button>
+          <div v-highlight>
+            <pre><code v-html="trayMenu"></code></pre>
+          </div>
+        </div>
+      </Panel>
     </Collapse>
   </div>
 </template>
@@ -60,6 +70,7 @@ import {
   openSwitchTray,
   readySwitchTray,
   clearSwitchTray,
+  trayMenu,
 } from "../../../public/main/menu/tray";
 export default {
   components: {
@@ -75,9 +86,11 @@ export default {
     openSwitchTray,
     readySwitchTray,
     clearSwitchTray,
+    trayMenu,
     msg: "打开托盘",
     showMsg: "托盘闪烁",
     value: "1",
+    menuMsg: "创建托盘菜单",
   }),
   methods: {
     //  打开关闭正常图标
@@ -100,7 +113,32 @@ export default {
         this.showMsg = "托盘闪烁";
       }
     },
+    handleTrayMenu() {
+      if (this.menuMsg === "创建托盘菜单") {
+        console.log(1);
+        ipcRenderer.send("main-menu", "ok");
+        this.menuMsg ='删除托盘菜单'
+      } else {
+        ipcRenderer.send("main-menu", "no");
+        this.menuMsg ='创建托盘菜单'
+
+      }
+    },
   },
+  mounted(){
+    ipcRenderer.on('main-tray-click',(event,param)=>{
+      alert('托盘菜单双击按下！')
+    })
+  },
+  destroyed(){
+    openTray = null;
+  clearTray = null;
+  ready = null;
+  openSwitchTray = null;
+  readySwitchTray = null;
+  clearSwitchTray = null;
+  trayMenu = null;
+  }
 };
 </script>
 

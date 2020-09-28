@@ -77,3 +77,38 @@ export function clearSwitchTray() {
     switchTrayIcon.destroy();
     clearInterval(setinter)
 }
+
+let tray
+export function trayMenu(win) {
+    const { Tray, Menu ,app} = require('electron');
+    console.log(Menu);
+    const path = require('path');
+    const iconPath = path.join(__static, 'images', 'tray', 'qq.png')   //  获取图标路径地址
+    tray = new Tray(iconPath) //  把路径传入即可
+    
+    //  左键双击
+    tray.on('double-click',()=>{
+        win.webContents.send('main-tray-click','on')
+    })
+
+    //  右键菜单
+    let menu = Menu.buildFromTemplate([
+        {
+            label: "显示界面",
+            click() {
+                win.show();
+            }
+        }, 
+        {
+            label: "退出",
+            click() {
+                app.quit();
+            }
+        }
+    ])
+    tray.setContextMenu(menu)
+}
+
+export function removeTaryMenu() {
+    tray.destroy()
+}

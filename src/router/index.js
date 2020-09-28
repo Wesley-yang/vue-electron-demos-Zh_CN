@@ -7,26 +7,34 @@ const routes = [
     path: '/',
     name: 'home',
     component: () => import('@/views/home/home'),
-    children:[
+    children: [
       {
-        path:"/winconfig",
-        component:() => import('@/views/win/win-config')
+        path: "/winconfig",
+        component: () => import('@/views/win/win-config')
       },
       {
-        path:"/navigation",
-        component:()=> import('@/views/menu/navigation.vue')
+        path: "/navigation",
+        component: () => import('@/views/menu/navigation.vue')
       },
       {
-        path:"/rightclickmenu",
-        component:()=> import('@/views/menu/right-click-menu.vue')
+        path: "/rightclickmenu",
+        component: () => import('@/views/menu/right-click-menu.vue')
       },
       {
-        path:"/keyboard",
-        component:()=> import('@/views/menu/key-board.vue')
+        path: "/keyboard",
+        component: () => import('@/views/menu/key-board.vue')
       },
       {
-        path:"/tray",
-        component:()=> import('@/views/menu/tray.vue')
+        path: "/tray",
+        component: () => import('@/views/menu/tray.vue')
+      }, 
+      {
+        path: "/dialog",
+        component: () => import('@/views/system/dialog.vue')
+      },
+      {
+        path: "/notice",
+        component: () => import('@/views/system/notice.vue')
       }
     ]
   },
