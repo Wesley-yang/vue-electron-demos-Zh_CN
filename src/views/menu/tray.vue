@@ -130,15 +130,6 @@ export default {
       alert('托盘菜单双击按下！')
     })
   },
-  destroyed(){
-    openTray = null;
-  clearTray = null;
-  ready = null;
-  openSwitchTray = null;
-  readySwitchTray = null;
-  clearSwitchTray = null;
-  trayMenu = null;
-  }
 };
 </script>
 
